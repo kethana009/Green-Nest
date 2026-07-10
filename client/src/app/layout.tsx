@@ -1,38 +1,31 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "sonner";
-import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Green Nest",
-  description: "Your modern aesthetic plant store",
-};
+'use client'
+import './globals.css'
+import { CartProvider } from '@/app/context/CartContext'
+import { WishlistProvider } from '@/app/context/WishlistContext'
+import BottomNav from './components/BottomNav'
+import { usePathname } from 'next/navigation'
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
+  const pathname = usePathname()
+  const isAdmin = pathname.startsWith('/admin')
+  const hideNav = pathname === '/' || pathname === '/login' || pathname.startsWith('/checkout') || pathname.startsWith('/order-confirmation')
+
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
-        {children}
-        <Toaster position="top-right" richColors />
+    <html lang="en">
+      <body className="bg-black">
+        <CartProvider>
+          <WishlistProvider>
+            <div className={isAdmin ? "pb-32" : hideNav ? "" : "pb-20"}>
+              {children}
+            </div>
+            {!isAdmin && !hideNav && <BottomNav />}
+          </WishlistProvider>
+        </CartProvider>
       </body>
     </html>
-  );
+  )
 }
-

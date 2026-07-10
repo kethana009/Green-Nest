@@ -46,9 +46,9 @@ app.use('/api/admin', adminRoutes);
 app.use(errorHandler);
 
 // ── Start Server ──────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n🌿 Green Nest API running on http://localhost:${PORT}`);
-  console.log(`   Health: http://localhost:${PORT}/health\n`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🌿 Green Nest API running on http://192.168.157.162:${PORT}`);
+  console.log(`   Health: http://192.168.157.162:${PORT}/health\n`);
 });
 
 export default app;
