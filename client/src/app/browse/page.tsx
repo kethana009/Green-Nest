@@ -367,9 +367,16 @@ function BrowsePageContent() {
     }
 
     const filteredProducts = allProducts.filter(p => {
-        if (p.main !== activeMain) return false
+        const productMain = String(p.main || '').trim().toLowerCase()
+        const selectedMain = String(activeMain || '').trim().toLowerCase()
+
+        if (productMain !== selectedMain) return false
         if (activeSub === "All") return true
-        return p.sub === activeSub
+
+        const productSub = String(p.sub || '').trim().toLowerCase()
+        const selectedSub = String(activeSub || '').trim().toLowerCase()
+
+        return productSub === selectedSub
     })
     const currentSubs = subCategories[activeMain as keyof typeof subCategories]
 
