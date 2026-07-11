@@ -330,7 +330,12 @@ function BrowsePageContent() {
                     mapped.forEach(dbItem => {
                         const existingIdx = merged.findIndex(item => item.name.toLowerCase() === dbItem.name.toLowerCase())
                         if (existingIdx > -1) {
-                            merged[existingIdx] = { ...merged[existingIdx], ...dbItem }
+                            merged[existingIdx] = {
+                                ...merged[existingIdx],
+                                ...dbItem,
+                                main: merged[existingIdx].main,
+                                sub: merged[existingIdx].sub
+                            }
                         } else {
                             merged.push(dbItem)
                         }
@@ -367,16 +372,17 @@ function BrowsePageContent() {
     }
 
     const filteredProducts = allProducts.filter(p => {
-        const productMain = String(p.main || '').trim().toLowerCase()
-        const selectedMain = String(activeMain || '').trim().toLowerCase()
+        if (
+            String(p.main).trim().toLowerCase() !==
+            String(activeMain).trim().toLowerCase()
+        ) return false
 
-        if (productMain !== selectedMain) return false
         if (activeSub === "All") return true
 
-        const productSub = String(p.sub || '').trim().toLowerCase()
-        const selectedSub = String(activeSub || '').trim().toLowerCase()
-
-        return productSub === selectedSub
+        return (
+            String(p.sub).trim().toLowerCase() ===
+            String(activeSub).trim().toLowerCase()
+        )
     })
     const currentSubs = subCategories[activeMain as keyof typeof subCategories]
 
