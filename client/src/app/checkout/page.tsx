@@ -72,12 +72,19 @@ export default function CheckoutPage() {
         setPlacing(true)
 
         try {
+            const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+            if (sessionError || !session?.access_token) {
+                router.push('/login')
+                return
+            }
+
             const response = await fetch('/api/order/create', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`
+                },
                 body: JSON.stringify({
-                    userId: user.id,
-                    total: total,
                     address: address,
                     cart: cart
                 })
